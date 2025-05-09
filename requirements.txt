@@ -3,4 +3,4 @@ python-dotenv
 fpdf
 openai
 PyMuPDF
-
+rich

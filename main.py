@@ -7,6 +7,8 @@ from tools.extractor import extract_text, extract_metadata, extract_urls_and_ips
 from tools.javascript import extract_javascript
 from tools.hasher import hash_file
 from tools.ai_analysis import run_openai_analysis
+from tools.codeviewer import view_pdf_code
+
 
 VERSION = "1.0"
 
@@ -41,6 +43,7 @@ def main():
     parser.add_argument("-m", "--metadata", action="store_true", help="Display PDF metadata")
     parser.add_argument("-t", "--text", action="store_true", help="Extract visible text from the PDF")
     parser.add_argument("--hash", action="store_true", help="Generate file hashes (MD5, SHA1, SHA256)")
+    parser.add_argument("--view-code", action="store_true", help="Show raw PDF code as text")
     parser.add_argument("--gpt-analyze", action="store_true", help="Analyze document content using OpenAI GPT and generate PDF report")
 
     args = parser.parse_args()
@@ -56,6 +59,11 @@ def main():
     if not os.path.exists(file_path):
         print(f"[ERROR] File not found: {file_path}")
         return
+
+    if args.view_code:
+        print("[*] Showing raw PDF code...\n")
+        view_pdf_code(file_path)
+
 
     if args.extract:
         print("[*] Extracting URLs and IP addresses...")
