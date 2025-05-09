@@ -12,6 +12,10 @@ from tools.xref_map import list_objects_and_xref
 from tools.embedded import list_embedded_files
 from tools.suspicious import scan_suspicious_actions
 from tools.entropy_streams import analyze_entropy, dump_all_streams
+from tools.deobfuscator import deobfuscate_pdf_javascript
+from tools.encryptor import encrypt_pdf, decrypt_pdf
+from tools.bruteforce import bruteforce_pdf_password
+
 
 
 VERSION = "1.1"
@@ -55,6 +59,12 @@ def main():
     parser.add_argument("--suspicious-actions", action="store_true", help="Scan for suspicious PDF actions like /Launch, /URI, /SubmitForm")
     parser.add_argument("--entropy", action="store_true", help="Analyze entropy of all PDF stream objects")
     parser.add_argument("--dump-streams", action="store_true", help="Dump all decompressed stream contents")
+    parser.add_argument("--deobfuscate", action="store_true", help="Detect and decode obfuscated JavaScript from PDF content")
+    parser.add_argument("--encrypt", metavar="PWD", help="Encrypt PDF with the specified password")
+    parser.add_argument("--out", metavar="OUTPUT", help="Specify output filename for encrypted PDF")
+    parser.add_argument("--decrypt", metavar="PWD", help="Decrypt a password-protected PDF")
+    parser.add_argument("--bruteforce", metavar="WORDLIST", help="Try to brute-force the PDF password using a wordlist file")
+
 
 
 
@@ -71,6 +81,10 @@ def main():
     if not os.path.exists(file_path):
         print(f"[ERROR] File not found: {file_path}")
         return
+
+    if args.deobfuscate:
+        print("[*] Running JavaScript deobfuscation...\n")
+        deobfuscate_pdf_javascript(file_path)
 
     if args.xref_map:
         print("[*] Analyzing XRef map and object positions...\n")
@@ -92,6 +106,9 @@ def main():
         print("[*] Dumping decompressed stream data...\n")
         dump_all_streams(file_path)
 
+    if args.bruteforce:
+        print(f"[*] Starting password brute-force using wordlist: {args.bruteforce}")
+        bruteforce_pdf_password(file_path, args.bruteforce)
 
     if args.view_code:
         print("[*] Showing raw PDF code...\n")
@@ -134,6 +151,15 @@ def main():
         text = extract_text(file_path)
         print(text)
 
+    if args.encrypt:
+        output_file = args.out or f"{os.path.splitext(file_path)[0]}_encrypted.pdf"
+        print(f"[*] Encrypting PDF with password '{args.encrypt}'...")
+        encrypt_pdf(file_path, output_file, args.encrypt)
+
+    if args.decrypt:
+        output_file = args.out or f"{os.path.splitext(file_path)[0]}_decrypted.pdf"
+        print(f"[*] Decrypting PDF with password '{args.decrypt}'...")
+        decrypt_pdf(file_path, output_file, args.decrypt)
 
     if args.hash:
         print("[*] Calculating file hashes...")
