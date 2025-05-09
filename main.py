@@ -67,7 +67,8 @@ def main():
         print("\n[+] IP Addresses:")
         for ip in ips:
             print(" -", ip)
-
+            print()
+             
     if args.javascript:
         print("[*] Scanning for embedded JavaScript...")
         scripts = extract_javascript(file_path)
@@ -100,10 +101,14 @@ def main():
             print(f"{algo.upper()}: {value}")
 
     if args.gpt_analyze:
+        print()  # Leerzeile für optische Trennung
         print("[*] Running GPT analysis...")
         result = run_openai_analysis(file_path)
         print("\n[+] GPT Analysis Output:\n")
+        print("=" * 60)
         print(result)
+        print("=" * 60)
+
 
 
 if __name__ == "__main__":

@@ -42,10 +42,8 @@ def analyze_with_openai(content):
         return f"[Error communicating with OpenAI API] {str(e)}"
 
 def run_openai_analysis(pdf_path):
-    print("[*] Extracting visible text...")
     visible_text = extract_text_for_ai(pdf_path)
 
-    print("[*] Extracting raw PDF structure...")
     structure = extract_raw_structure(pdf_path)
     structure_text = f"""
 PDF Header:
@@ -59,7 +57,7 @@ Trailer:
 
 First 10 Objects:
 """
-    for i, obj in enumerate(structure['objects'], 1):
+    for i, obj in enumerate(structure['objects'][:5], 1):  # optional Begrenzung
         structure_text += f"\n[Object {i}]\n{obj.strip()}\n"
 
     combined_input = (
@@ -67,10 +65,5 @@ First 10 Objects:
         "\n\n=== Raw Structure ===\n" + structure_text
     )
 
-    print("[*] Sending combined content to GPT...")
-    result = analyze_with_openai(combined_input)
-    print("[+] GPT analysis complete.\n")
-    print("=" * 60)
-    print(result)
-    print("=" * 60)
-    return result
+    return analyze_with_openai(combined_input)
+
