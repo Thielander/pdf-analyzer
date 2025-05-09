@@ -1,4 +1,4 @@
-# PDF Analyzer 🕵️‍♂️
+# PDF Analyzer (BETA) 🕵️‍♂️
 
 A powerful, modular PDF analysis toolkit written in Python — inspired by tools like **PDF Stream Dumper**, **pdf-parser**, **ExifTool**, and **PDF CanOpener**. Includes integrated GPT-4 analysis for deeper inspection of embedded content.
 

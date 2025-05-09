@@ -8,9 +8,13 @@ from tools.javascript import extract_javascript
 from tools.hasher import hash_file
 from tools.ai_analysis import run_openai_analysis
 from tools.codeviewer import view_pdf_code
+from tools.xref_map import list_objects_and_xref
+from tools.embedded import list_embedded_files
+from tools.suspicious import scan_suspicious_actions
+from tools.entropy_streams import analyze_entropy, dump_all_streams
 
 
-VERSION = "1.0"
+VERSION = "1.1"
 
 def print_banner():
     print(rf"""
@@ -46,6 +50,12 @@ def main():
     parser.add_argument("--gpt-analyze", action="store_true", help="Analyze document content using OpenAI GPT and generate PDF report")
     parser.add_argument("--view-code", action="store_true", help="Show raw PDF code as text")
     parser.add_argument("--search", metavar="TERM", help="Highlight specific term in PDF code view")
+    parser.add_argument("--xref-map", action="store_true", help="List all PDF objects and their xref positions")
+    parser.add_argument("--embedded", action="store_true", help="List embedded files in the PDF")
+    parser.add_argument("--suspicious-actions", action="store_true", help="Scan for suspicious PDF actions like /Launch, /URI, /SubmitForm")
+    parser.add_argument("--entropy", action="store_true", help="Analyze entropy of all PDF stream objects")
+    parser.add_argument("--dump-streams", action="store_true", help="Dump all decompressed stream contents")
+
 
 
     args = parser.parse_args()
@@ -61,6 +71,27 @@ def main():
     if not os.path.exists(file_path):
         print(f"[ERROR] File not found: {file_path}")
         return
+
+    if args.xref_map:
+        print("[*] Analyzing XRef map and object positions...\n")
+        list_objects_and_xref(file_path)
+
+    if args.embedded:
+        print("[*] Scanning for embedded files...\n")
+        list_embedded_files(file_path)
+
+    if args.suspicious_actions:
+        print("[*] Scanning for suspicious PDF actions...\n")
+        scan_suspicious_actions(file_path)
+
+    if args.entropy:
+        print("[*] Performing entropy analysis...\n")
+        analyze_entropy(file_path)
+
+    if args.dump_streams:
+        print("[*] Dumping decompressed stream data...\n")
+        dump_all_streams(file_path)
+
 
     if args.view_code:
         print("[*] Showing raw PDF code...\n")
@@ -122,4 +153,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n[!] Execution interrupted by user (Ctrl + C).")
+
