@@ -1,0 +1,10 @@
+# Umgebungsvariablen
+.env
+
+# Python-Cache-Dateien
+__pycache__/
+*.pyc
+
+# Ausgabedateien
+*.pdf
+
