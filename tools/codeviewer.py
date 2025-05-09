@@ -4,10 +4,10 @@ import re
 
 console = Console()
 
-def view_pdf_code(pdf_path, lines=500):
+def view_pdf_code(pdf_path, lines=500, search_term=None):
     """
     Displays colorized raw PDF code (up to `lines` lines).
-    Highlights common PDF keys, paths, and values.
+    Optionally highlights matching `search_term` entries.
     """
     try:
         with open(pdf_path, "rb") as f:
@@ -17,28 +17,30 @@ def view_pdf_code(pdf_path, lines=500):
             for i, line in enumerate(all_lines[:lines], 1):
                 t = Text(f"{i:04}: ")
 
-                # PDF objects like "12 0 obj"
+                # Highlight object definitions
                 obj_match = re.search(r"\d+\s+\d+\s+obj", line)
                 if obj_match:
                     t.append(obj_match.group(), style="bold magenta")
                     line = line.replace(obj_match.group(), "")
 
-                # Paths like /Type /JS /Pages etc.
+                # Highlight /Paths
                 for part in re.findall(r"/[A-Za-z0-9#]+", line):
                     line = line.replace(part, f"[cyan]{part}[/cyan]")
 
-                # Strings in parentheses
+                # Highlight strings
                 line = re.sub(r"\((.*?)\)", r"[green](\1)[/green]", line)
 
-                # Stream keywords
-           
+                # Highlight stream keywords
                 line = line.replace("endstream", "[yellow]endstream[/yellow]")
+
+                # Highlight search term if provided
+                if search_term:
+                    pattern = re.escape(search_term)
+                    line = re.sub(f"({pattern})", r"[bold red]\1[/bold red]", line, flags=re.IGNORECASE)
 
                 t.append(Text.from_markup(line))
                 console.print(t)
 
-            if len(all_lines) > lines:
-                console.print(f"\n[dim]... (truncated at {lines} lines)[/dim]")
 
     except Exception as e:
         console.print(f"[bold red][Error][/bold red] Failed to read PDF content: {str(e)}")
