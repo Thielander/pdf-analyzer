@@ -17,12 +17,12 @@ A powerful, modular PDF analysis toolkit written in Python — inspired by tools
 
 ## 🛠 Installation
 
-git clone https://github.com/thielander/pdf-analyzer.git
-cd pdf-analyzer
-python3 -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-mv .env.example .env
+- git clone https://github.com/thielander/pdf-analyzer.git
+- cd pdf-analyzer
+- python3 -m venv venv
+- source venv/bin/activate  # Windows: venv\Scripts\activate
+- pip install -r requirements.txt
+- mv .env.example .env
 
 ---
 
@@ -32,16 +32,16 @@ python main.py path/to/file.pdf [options]
 
 ### Available Options
 
-Option	Description
--e	Extract URLs and IPs
--js	Detect embedded JavaScript
--m	Show metadata
--t	Extract visible text
---hash	Generate MD5/SHA1/SHA256 hashes
---gpt-analyze	Analyze content with OpenAI GPT-4 and save PDF
+** Option	Description **
+- -e	Extract URLs and IPs
+- -js	Detect embedded JavaScript
+- -m	Show metadata
+- -t	Extract visible text
+- --hash	Generate MD5/SHA1/SHA256 hashes
+- --gpt-analyze	Analyze content with OpenAI GPT-4 and save PDF
 
 ---
 
 ## 📄 Example
 
-python main.py samples/malicious.pdf -e -js --gpt-analyze
+- python main.py samples/malicious.pdf -e -js --gpt-analyze
