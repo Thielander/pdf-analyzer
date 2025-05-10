@@ -51,9 +51,8 @@ python main.py path/to/file.pdf [options]
 - --encrypt PWD         Encrypt PDF with the specified password
 - --out OUTPUT          Specify output filename for encrypted PDF
 - --decrypt PWD         Decrypt a password-protected PDF
-- --bruteforce WORDLIST
-                        Try to brute-force the PDF password using a wordlist file
-(venv) alexanderthiele@Mac pdf-analyzer % 
+- --bruteforce WORDLIST Try to brute-force the PDF password using a wordlist file
+
 
 ---
 
